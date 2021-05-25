@@ -1,19 +1,53 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./Banner.css";
+import axios from './Axios';
+import requests from './Requests';
 
 function Banner() {
+    const [movie, setMovie] = useState ([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const request = await axios.get(requests.fetchNetflixOriginals);
+
+            setMovie(
+                request.data.results[
+                    Math.floor(Math.random() * request.data.results.length - 1)
+                ]
+            );
+            return request;
+        }
+        fetchData();
+
+    }, []);
+
+    function truncate (string, n) {
+        return string?.length > n ? string.substr(0, n-1)  + '...' : string;
+    }
     return (
         <header 
             className="banner"
             style={{
                 backgroundSize: "cover",
-                backgroundImage: `url("https://images.squarespace-cdn.com/content/v1/5825e5b96a496325c2dd987e/1562341935274-1NH6YNYZ85GHRWS8P0H2/ke17ZwdGBToddI8pDm48kDLNi4VuRPPv4o6xvaQaV48UqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYy7Mythp_T-mtop-vrsUOmeInPi9iDjx9w8K4ZfjXt2dkbrwftM_SdKWIRnKq_qAsuqEXeVz9XwiPlkbN4Jo5a7CjLISwBs8eEdxAxTptZAUg/Summer+Movie+Rundown-+Netflix-+banner.png")`,
+                backgroundImage: `url("https://image.tmdb.org/t/p/original${movie?.backdrop_path}")`,
                 backgroundPosition: "center center",
             }
             }
         >
-
-            
+            <div className="banner__contents">
+                <h1 className="banner__title">
+                    {movie?.title || movie?.name || movie?.original_name}
+                </h1>
+                <div className="banner__buttons">
+                    <button className="banner__button">Play</button>
+                    <button className="banner__button">My List</button>
+                </div>
+                <h1 className="banner__description">
+                    {truncate(movie?.overview, 150)}
+                </h1>
+                
+            </div>
+            <div className="banner--fadeBottom" />
         </header>
     )
 }
