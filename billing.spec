@@ -5,24 +5,45 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        # Ship the entire frontend folder inside the bundle
         ('frontend', 'frontend'),
     ],
     hiddenimports=[
-        # uvicorn dynamic imports
+        # uvicorn internals
+        'uvicorn',
+        'uvicorn.main',
+        'uvicorn.config',
+        'uvicorn.server',
         'uvicorn.logging',
         'uvicorn.loops',
         'uvicorn.loops.auto',
+        'uvicorn.loops.asyncio',
         'uvicorn.protocols',
         'uvicorn.protocols.http',
         'uvicorn.protocols.http.auto',
+        'uvicorn.protocols.http.h11_impl',
         'uvicorn.protocols.websockets',
         'uvicorn.protocols.websockets.auto',
         'uvicorn.lifespan',
         'uvicorn.lifespan.on',
-        # SQLAlchemy SQLite dialect
+        # HTTP layer
+        'h11',
+        'h11._connection',
+        'h11._events',
+        'h11._util',
+        # async IO
+        'anyio',
+        'anyio._backends._asyncio',
+        'anyio.abc',
+        'anyio.streams.memory',
+        # SQLAlchemy
         'sqlalchemy.dialects.sqlite',
+        'sqlalchemy.dialects.sqlite.pysqlite',
         'sqlalchemy.sql.default_comparator',
+        # stdlib extras sometimes missed
+        'email.mime.text',
+        'email.mime.multipart',
+        'multiprocessing.spawn',
+        'multiprocessing.forkserver',
     ],
     hookspath=[],
     hooksconfig={},
@@ -43,7 +64,7 @@ exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,      # No terminal window — users interact via the browser
+    console=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
@@ -60,11 +81,10 @@ coll = COLLECT(
     name='Krishna Chains',
 )
 
-# Mac .app bundle
 app = BUNDLE(
     coll,
     name='Krishna Chains.app',
-    icon=None,          # swap None for 'icon.icns' when you have an icon
+    icon=None,
     bundle_identifier='com.krishnachains.billing',
     info_plist={
         'CFBundleDisplayName': 'Krishna Chains',
