@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -6,6 +7,12 @@ from app.database import Base, engine, SessionLocal
 from app.models.user import User
 from app.routers import auth
 from app.services.auth_service import hash_password
+
+# KC_BASE_DIR is set by run_app.py when packaged (points to sys._MEIPASS).
+# In dev it falls back to the project root (one level up from app/).
+_base = os.getenv("KC_BASE_DIR") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+FRONTEND_DIR = os.path.join(_base, "frontend")
+STATIC_DIR   = os.path.join(FRONTEND_DIR, "static")
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,19 +34,19 @@ seed_admin()
 
 app.include_router(auth.router)
 
-app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 @app.get("/")
 def serve_login():
-    return FileResponse("frontend/login.html")
+    return FileResponse(os.path.join(FRONTEND_DIR, "login.html"))
 
 
 @app.get("/app")
 def serve_app():
-    return FileResponse("frontend/app.html")
+    return FileResponse(os.path.join(FRONTEND_DIR, "app.html"))
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "app": "Aurum Billing System"}
+    return {"status": "ok", "app": "Krishna Chains Billing"}
