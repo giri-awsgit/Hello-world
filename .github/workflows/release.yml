@@ -37,24 +37,24 @@ jobs:
           zip -r "Krishna-Chains.zip" "Krishna Chains.app"
 
       # --- Only runs when a version tag is pushed ---
+      # Uses gh CLI (pre-installed on all GitHub runners) — no external action download needed
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
-        with:
-          name: "Krishna Chains ${{ github.ref_name }}"
-          body: |
-            ## Krishna Chains Billing — ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            dist/Krishna-Chains.zip \
+            --title "Krishna Chains ${{ github.ref_name }}" \
+            --notes "## Krishna Chains Billing — ${{ github.ref_name }}
 
-            ### How to install (Mac)
-            1. Download **Krishna-Chains.zip** below
-            2. Unzip it (double-click the zip)
-            3. Double-click **Krishna Chains.app** to launch
-            4. Your billing data is saved in `~/Documents/Krishna Chains/` — it is never deleted when you update the app
+          ### How to install (Mac)
+          1. Download **Krishna-Chains.zip** below
+          2. Unzip it (double-click the zip)
+          3. Double-click **Krishna Chains.app** to launch
+          4. Your billing data is saved in \`~/Documents/Krishna Chains/\` — it is never deleted when you update the app
 
-            **Login:** username `rkc` · password `rkc0345`
-          files: dist/Krishna-Chains.zip
-          draft: false
-          prerelease: false
+          **Login:** username \`rkc\` · password \`rkc0345\`"
 
       # --- Runs on manual trigger (no tag) — stores artifact for 7 days ---
       - name: Upload artifact (manual builds)
