@@ -33,8 +33,10 @@ jobs:
 
       - name: Zip the .app bundle
         run: |
+          cp Install.command dist/Install.command
+          chmod +x dist/Install.command
           cd dist
-          zip -r "Krishna-Chains.zip" "Krishna Chains.app"
+          zip -r "Krishna-Chains.zip" "Krishna Chains.app" Install.command
 
       # --- Only runs when a version tag is pushed ---
       # Uses gh CLI (pre-installed on all GitHub runners) — no external action download needed
@@ -48,13 +50,16 @@ jobs:
             --title "Krishna Chains ${{ github.ref_name }}" \
             --notes "## Krishna Chains Billing — ${{ github.ref_name }}
 
-          ### How to install (Mac)
+          ### First-time install (Mac)
           1. Download **Krishna-Chains.zip** below
           2. Unzip it (double-click the zip)
-          3. Double-click **Krishna Chains.app** to launch
-          4. Your billing data is saved in \`~/Documents/Krishna Chains/\` — it is never deleted when you update the app
+          3. Double-click **Install.command** — this removes the macOS security block and opens the app
+          4. After that, always open via **Krishna Chains.app** directly
 
-          **Login:** username \`rkc\` · password \`rkc0345\`"
+          ### Updating
+          Download the new zip, unzip, replace the old app. Your data in \`~/Documents/Krishna Chains/\` is never touched.
+
+          Contact your administrator for login credentials."
 
       # --- Runs on manual trigger (no tag) — stores artifact for 7 days ---
       - name: Upload artifact (manual builds)
