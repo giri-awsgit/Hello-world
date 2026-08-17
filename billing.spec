@@ -8,6 +8,16 @@ a = Analysis(
         ('frontend', 'frontend'),
     ],
     hiddenimports=[
+        # app package — PyInstaller misses subpackages with empty __init__.py
+        'app',
+        'app.main',
+        'app.database',
+        'app.models',
+        'app.models.user',
+        'app.routers',
+        'app.routers.auth',
+        'app.services',
+        'app.services.auth_service',
         # uvicorn internals
         'uvicorn',
         'uvicorn.main',
