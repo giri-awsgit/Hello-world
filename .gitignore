@@ -22,5 +22,8 @@ env/
 .DS_Store
 Thumbs.db
 
-# Ollama models (large, don't commit)
-models/
+# Ollama models (large, don't commit) — /models/ targets root only, not app/models/
+# /models/
+
+# logs
+app.log

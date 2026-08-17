@@ -33,10 +33,8 @@ jobs:
 
       - name: Zip the .app bundle
         run: |
-          cp Install.command dist/Install.command
-          chmod +x dist/Install.command
           cd dist
-          zip -r "Krishna-Chains.zip" "Krishna Chains.app" Install.command
+          zip -r "Krishna-Chains.zip" "Krishna Chains.app"
 
       # --- Only runs when a version tag is pushed ---
       # Uses gh CLI (pre-installed on all GitHub runners) — no external action download needed
@@ -50,14 +48,18 @@ jobs:
             --title "Krishna Chains ${{ github.ref_name }}" \
             --notes "## Krishna Chains Billing — ${{ github.ref_name }}
 
-          ### First-time install (Mac)
-          1. Download **Krishna-Chains.zip** below
-          2. Unzip it (double-click the zip)
-          3. Double-click **Install.command** — this removes the macOS security block and opens the app
-          4. After that, always open via **Krishna Chains.app** directly
+          ### Install (Mac) — first time only
+          1. Download **Krishna-Chains.zip** below and unzip it
+          2. Open **Terminal** (search in Spotlight)
+          3. Run this command:
+          \`\`\`
+          sudo xattr -rd com.apple.quarantine ~/Downloads/\"Krishna Chains.app\"
+          \`\`\`
+          4. Enter your Mac password when prompted
+          5. Double-click **Krishna Chains.app** — it will open every time from now on
 
           ### Updating
-          Download the new zip, unzip, replace the old app. Your data in \`~/Documents/Krishna Chains/\` is never touched.
+          Download the new zip, unzip, replace the old app, run the sudo command once on the new version. Your data in \`~/Documents/Krishna Chains/\` is never touched.
 
           Contact your administrator for login credentials."
 
